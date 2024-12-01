@@ -264,9 +264,7 @@ if __name__ == '__main__':
     tasks = [
         ["isolator_ceviche", [3, 3], (2, 0.4), (0.8, 0.8), 20, 0.1, [], 0.1, "level_set", "rectangular", 'ste', 235, False, 0.05, 0.5, 'adam', 3, 30, 0.03, 0.1, 4, 256, 1, (1,), (3,), (1,), (1, 3), "eigen_mode", "eigen_mode", 1, 0.2, 0, 3, 2, 7, "cosine", 50, 100, 100, 100, 100, True, True, True, True, False, 'all', 222, 18, "ours", 0, None, True, "efficient2c", True, True, False, 40],
         ]
-    
 
-    # tasks = [[0, 1]]
 
     with Pool(8) as p:
         p.map(task_launcher, tasks)
