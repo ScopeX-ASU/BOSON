@@ -3,7 +3,7 @@ Fabrication-robust Photonic Inverse Design. Accepted to DATE 2025
 
 ## Prerequisites
 
-To run the code, please install the open-source FDFD simulator [Ceviche](https://github.com/fancompute/ceviche), [pyutils](https://github.com/JeremieMelo/pyutility) and other necessary packages in requirements.txt
+To run the code, please install the open-source FDFD simulator [Ceviche](https://github.com/fancompute/ceviche), in this code, I used a Ceviche with modification of its viz.py file, [pyutils](https://github.com/JeremieMelo/pyutility) and other necessary packages in requirements.txt
 
 
 ## To launch the optimization
