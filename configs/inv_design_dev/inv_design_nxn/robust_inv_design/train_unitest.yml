@@ -1,0 +1,152 @@
+criterion:
+  name: distanceLoss
+  min_distance: 0.12
+  aux_output_weight: 0.0
+
+aux_criterion:
+  curl_loss:
+    weight: 0
+    mfs: 0.1
+  tv_loss:
+    weight: 0.0
+    norm: False
+  gap_loss:
+    weight: 0
+    mfs: 0.1
+
+test_criterion:
+  name: nmse
+
+optimizer:
+  name: adam
+  lr: 0.01
+  lr_level_set: 0.05
+  weight_decay: 0.000
+  line_search_fn: None
+
+lr_scheduler:
+  name: cosine
+  lr_gamma: 0.99
+  lr_min: 1e-4
+
+sharp_scheduler:
+  name: sharpness
+  init_sharp: 4
+  final_sharp: 256
+  sharp_threshold: 1
+  mode: 'cosine'
+
+res_scheduler:
+  name: resolution
+  init_res: 100
+  final_res: 100
+  test_res: 100
+  eval_res: 50
+
+run:
+  experiment: robust_inv
+  n_epochs: 50
+  use_cuda: 1
+  gpu_id: 0
+  deterministic: 1
+  random_state: 59
+  log_interval: 10
+  compare_grad_similarity: False
+  fp16: False
+  wandb:
+    project: robust_inverse_design
+    entity: scopex
+    name: local_search
+  n_epoch_inner: 3
+  two_stage: False
+  sam: False
+
+quantize:
+  weight_bit: 32
+  input_bit: 32
+
+checkpoint:
+  save_best_model_k: 3
+  checkpoint_dir: "robust_inv/train_robust_inv"
+  model_id: 0
+  resume: 1
+  restore_checkpoint: "./checkpoint/robust_inv/train_robust_inv/isolator_ceviche_id-221_c-BASELINE_match_all_MFS_transmission_based_matching_err-0.0013_epoch-41.pt"
+  no_linear: 0
+
+model:
+  name: InvDesignDev
+  device_type: isolator_ceviche
+  coupling_region_cfg:
+    num_in_ports: 1
+    num_out_ports: 1
+    box_size: [3, 3]
+    grid_step: 0.05
+    NPML: (2, 2)
+  sim_cfg:
+    resolution: 20
+    PML: (2, 2)
+    record_interval: 0.3
+    store_fields: ['Ez']
+    until: 350
+    stop_when_decay: False
+    border_width: [0, 0.4]
+  port_width: (0.8, 0.8)
+  port_len: (2, 0.4)
+  adjoint_mode: fdfd_ceviche
+  df: 0
+  nf: 1
+  eps_r: eps_si
+  eps_bg: air
+  eps_lower: air
+  eps_upper: air
+  coupling_init: rectangular
+  joint_opt: False
+  opt_coupling_method: level_set
+  binary_projection_method: heaviside
+  eval_aware: True
+  litho_aware: False
+  etching_aware: True
+  heaviside_mode: ste
+  if_subpx_smoothing: False
+  aux_out: False
+  ls_down_sample: 2
+  Wout: 1
+  Wref: 0
+  Wct: 0
+  Wrad: 0
+  temp_aware: False
+  fw_bi_proj_th: 235
+  bw_bi_proj_th: 256
+  Wbw: 0
+  Wratio: 0
+  fw_source_mode: (1,)
+  fw_probe_mode: (3,)
+  bw_source_mode: (1,)
+  bw_probe_mode: (1, 3)
+  fw_transmission_mode: eigen_mode
+  bw_transmission_mode: eigen_mode
+  rho_size: 0.1
+  MFS_ctrl_method: ['gaussian_blur']
+  mfs: 0.1
+  parameterization: level_set
+  num_basis: 10
+  include_ga_worst_case: False
+  robust_run: True
+  sample_mode: all
+  make_up_random_sample: False
+matching_model:
+  name: EpsMatcher
+  matching_mode: all
+
+debug:
+  verbose: 1
+
+plot:
+  train: True
+  valid: True
+  test: True
+  interval: 1
+  dir_name: robust_inv_design
+  high_res_interval: 10
+  output_video_path: 'output_video'
+

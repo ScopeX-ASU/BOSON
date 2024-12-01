@@ -1,0 +1,84 @@
+criterion:
+  name: distanceLoss
+  min_distance: 0.12
+  aux_output_weight: 0.0
+
+aux_criterion:
+  curl_loss:
+    weight: 0.0
+  gap_loss:
+    weight: 0.0
+  tv_loss:
+    weight: 0.0
+    norm: False
+
+test_criterion:
+  name: nmse
+
+optimizer:
+  name: adam
+  lr: 0.01
+  lr_level_set: 0.05
+  weight_decay: 0.000
+  line_search_fn: None
+
+lr_scheduler:
+  name: cosine
+  lr_gamma: 0.99
+  lr_min: 1e-4
+
+sharp_scheduler:
+  name: sharpness
+  init_sharp: 4
+  final_sharp: 256
+  sharp_threshold: 1
+  mode: 'cosine'
+
+res_scheduler:
+  name: resolution
+  init_res: 100
+  final_res: 100
+  test_res: 100
+  eval_res: 50
+
+run:
+  experiment: "robust_inv"
+  n_epochs: 50
+  use_cuda: 1
+  gpu_id: 0
+  deterministic: 1
+  random_state: 59
+  log_interval: 10
+  fp16: False
+  wandb:
+    project: robust_inverse_design
+    entity: scopex
+    name: local_search
+
+quantize:
+  weight_bit: 32
+  input_bit: 32
+
+checkpoint:
+  save_best_model_k: 3
+  checkpoint_dir: "robust_inv/train_robust_inv"
+  model_id: 0
+  resume: 0
+  restore_checkpoint: "None"
+  no_linear: 0
+
+model:
+  device_type: "crossing_angler"
+
+debug:
+  verbose: 1
+
+plot:
+  train: True
+  valid: True
+  test: True
+  interval: 1
+  dir_name: robust_inv_design
+  high_res_interval: 10
+  output_video_path: 'output_video'
+

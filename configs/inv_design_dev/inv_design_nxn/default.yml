@@ -1,0 +1,115 @@
+criterion:
+  name: distanceLoss
+  max_distance: 0.15
+
+aux_criterion:
+  curl_loss:
+    weight: 0.0
+  tv_loss:
+    weight: 0.0
+    norm: False
+
+optimizer:
+  name: adam
+  lr: 0.002
+  weight_decay: 0.000
+
+ascend_optimizer:
+  name: adam
+  lr: 10
+  weight_decay: 0.000
+
+lr_scheduler:
+  name: cosine
+  lr_gamma: 0.99
+  lr_min: 0
+
+ascend_lr_scheduler:
+  name: constant
+
+matching_lr_scheduler:
+  name: cosine
+  lr_gamma: 0.99
+  lr_min: 0
+
+matching_optimizer:
+  name: adam
+  lr: 0.02
+  weight_decay: 0.000
+
+run:
+  experiment: "default"
+  n_epochs: 100
+  use_cuda: 1
+  gpu_id: 0
+  deterministic: 1
+  random_state: 42
+  log_interval: 10
+  compare_grad_similarity: False
+
+quantize:
+  weight_bit: 32
+  input_bit: 32
+
+checkpoint:
+  save_best_model_k: 3
+  checkpoint_dir: "robust_inv/train_robust_inv"
+  model_comment: ""
+  resume: 0
+  restore_checkpoint: ""
+  no_linear: 0
+
+model:
+  name: "InvDesignDev"
+  device_type: "crossing_angler"
+  coupling_region_cfg:
+    num_in_ports: 1
+    num_out_ports: 1
+    box_size: [2.6, 2.6]
+  sim_cfg:
+    resolution: 20
+    PML: (2, 2)
+    record_interval: 0.3
+    store_fields: ["Ez"]
+    until: 350
+    stop_when_decay: False
+    border_width: [0, 1]
+  port_width: (0.48, 0.48)
+  port_len: (1, 1)
+  adjoint_mode: 'fdfd_angler'
+  df: 0
+  nf: 1
+  eps_r: eps_si
+  eps_bg: air
+  eps_lower: air
+  eps_upper: air
+  coupling_init: "random"
+  joint_opt: False
+  opt_coupling_method: 'level_set'
+  binary_projection_method: 'heaviside'
+  eval_aware: False
+  litho_aware: False
+  etching_aware: False
+  heaviside_mode: "ste"
+  if_subpx_smoothing: False
+  aux_out: False
+  ls_down_sample: 2
+  Wout: 0.25
+  Wref: 0.25
+  Wct: 0.25
+  Wrad: 0.25
+
+matching_model:
+  name: "EpsMatcher"
+
+debug:
+  verbose: 1
+
+plot:
+  train: True
+  valid: True
+  test: True
+  interval: 10
+  root: plot
+  dir_name: default
+
